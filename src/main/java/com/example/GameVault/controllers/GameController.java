@@ -22,7 +22,6 @@ public class GameController {
     private static List<Juego> juegosDb = new ArrayList<>();
     private static long idCounter = 1;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     static {
         // juegosDb.add(new Juego(idCounter++, "The Legend of Zelda", "Aventura épica", "zelnda.jpg"));
@@ -49,34 +48,15 @@ public class GameController {
                                @RequestParam("descripcion") String descripcion,
                                @RequestParam("portada")MultipartFile portada) {
         // Imagen por defento si no suben nada
-        String nombreArchivo = "default.png";
+
 
         // Verificamos si el archivo no está vacio
         if(!portada.isEmpty()){
-            try{
-                // Tip para clase: Crear la carpeta si noe xiste
-                Path uploadPath = Paths.get(UPLOAD_DIR);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
 
-                // generamos un nombre único para evitar sobreescribir archivos con el mismo nombre
-                nombreArchivo = UUID.randomUUID().toString() + "_" + portada.getOriginalFilename();
-                Path filePath = uploadPath.resolve(nombreArchivo);
-
-                // Guardamos el archivos fisicamente en disco
-                Files.copy(portada.getInputStream(), filePath);
-
-                System.out.println("Archivo guardado en: " + filePath.toAbsolutePath());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                // En un proyecto real, manejamos una exepción apropiadamente (ej. redirigir con error)
-            }
         }
 
-        Juego nuevoJuego = new Juego(idCounter++, titulo, descripcion, nombreArchivo);
-        juegosDb.add(nuevoJuego);
+        // Juego nuevoJuego = new Juego(idCounter++, titulo, descripcion, nombreArchivo);
+        // juegosDb.add(nuevoJuego);
 
         return "redirect:/juegos";
 
