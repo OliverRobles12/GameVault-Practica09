@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         String uploadPath = uploadDir.toFile().getAbsolutePath();
         
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:/" + uploadPath + "/");
+                .addResourceLocations("file:" + uploadPath.replace("\\", "/") + "/");
     }
 
     // Vamos a tener acceso a esta informacion cuando tengamos una sesion activa
@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor).addPathPatterns(
                 "/mis-juegos",
-                "/juego/nuevo",
+                "/juegos/nuevo",
                 "/juegos/editar/**",
                 "/juegos/eliminar/**"
         ).excludePathPatterns(

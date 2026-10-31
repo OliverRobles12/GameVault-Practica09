@@ -12,6 +12,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest requeset, HttpServletResponse response, Object handler)
             throws Exception{
+        // Se indica que no se cree una sesion nueva si no existe una
         HttpSession session = requeset.getSession(false);
 
         if (session == null || session.getAttribute("usuario_id") == null) {

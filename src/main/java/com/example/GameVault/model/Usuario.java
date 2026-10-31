@@ -3,6 +3,8 @@ package com.example.GameVault.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Juego> juegos;
 

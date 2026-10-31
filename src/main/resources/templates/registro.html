@@ -1,6 +1,6 @@
-<!D<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: html(
+      th:replace="~{layout/base :: layout(
         ~{::title},
         ~{::main}
       )}">
@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Contraseña</label>
-                                    <input type="password" class="form-control" id="password" th:field="*{contrasenia}" required minlength="6">
+                                    <input type="password" class="form-control" id="password" th:field="*{password}" required minlength="6">
                                     <div class="form-text">Mínimo 6 caracteres.</div>
                                 </div>
                                 <button type="submit" class="btn btn-success w-100">Registrarme</button>

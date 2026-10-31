@@ -20,6 +20,10 @@ public class JuegoService {
     private JuegoRepository juegoRepository;
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
+    public List<Juego> obtenerPorUsuario(Long usuarioId) {
+        return juegoRepository.findByUsuarioId(usuarioId);
+    }
+
     public List<Juego> obtenerTodos() {
         return juegoRepository.findAll();
     }
@@ -27,14 +31,12 @@ public class JuegoService {
     // Recomendable regresar algun tipo de informacion de si el juego fue guardadp
     public void guardarJuego(Juego juego, MultipartFile portada) {
 
-        String nombreArchivo = "default.png";
-        if(portada.isEmpty()){
-            nombreArchivo = guardarImagenLocal(portada);
-            // Cloudinary
-            // Storage de firebase
+        if (portada != null && !portada.isEmpty()) {
+            juego.setPortadaUrl(guardarImagenLocal(portada));
+        } else if (juego.getPortadaUrl() == null) {
+            juego.setPortadaUrl("default.png");
         }
 
-        juego.setPortadaUrl(nombreArchivo);
         juegoRepository.save(juego);
 
     }

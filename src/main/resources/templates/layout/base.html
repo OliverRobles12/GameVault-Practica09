@@ -10,7 +10,7 @@
         <nav>
             <a th:href="@{/juegos}" class="nav-brand">🎮 GameVault</a>
             <div class="nav-links">
-                <th:block th:if="${session.usuario_id != null}">
+                <th:block th:if="${session.usuario_id == null}">
                     <a th:href="@{/login}">Iniciar sesión</a>
                     <a th:href="@{/registro}">Registro</a>
                 </th:block>

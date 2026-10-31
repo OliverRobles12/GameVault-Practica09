@@ -32,7 +32,7 @@ class AuthController {
         Usuario usuario = usuarioService.autenticarUsuario(email, password);
 
         if(usuario != null) {
-            session.setAttribute("usuario_id", usuario);
+            session.setAttribute("usuario_id", usuario.getId());
             return "redirect:/mis-juegos";
         } else {
             model.addAttribute("error", "Credenciales incorrectas");

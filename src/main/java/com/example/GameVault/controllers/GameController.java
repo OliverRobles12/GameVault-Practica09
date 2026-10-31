@@ -40,31 +40,53 @@ public class GameController {
             @RequestParam(name="buscar", required = false) String buscar, Model model
     ) {
         if (buscar!= null && !buscar.isEmpty()) {
-            model.addAttribute("Juegos", juegoService.buscarPorTitulo(buscar));
+            model.addAttribute("juegos", juegoService.buscarPorTitulo(buscar));
             model.addAttribute("busquedaActual", buscar); // Para mantener el texto en la barra
         } else {
-            model.addAttribute("Juegos", juegoService.obtenerTodos());
+            model.addAttribute("juegos", juegoService.obtenerTodos());
         }
         return "juegos";
     }
 
+    @GetMapping("/mis-juegos")
+    public String misJuegos(Model model) {
+        Usuario logueado = usuarioService.obtenerUsuarioLogueado();
+        if (logueado == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("usuario", logueado);
+        model.addAttribute("juegos", juegoService.obtenerPorUsuario(logueado.getId()));
+        return "mis-juegos";
+    }
+
     @GetMapping("/juegos/nuevo")
-    public String mostrarFormulario() {
+    public String mostrarFormulario(Model model) {
+        model.addAttribute("juego", new Juego());
         return "formulario";
     }
 
     @PostMapping("/juegos")
     public String guardarJuego(@RequestParam("titulo") String titulo,
                                @RequestParam("descripcion") String descripcion,
+                               @RequestParam("precio") Double precio,
+                               @RequestParam("categoria") String categoria,
                                @RequestParam("portada")MultipartFile portada) {
+
+        Usuario logueado = usuarioService.obtenerUsuarioLogueado();
+        if (logueado == null) {
+            return "redirect:/login";
+        }
 
         Juego nuevoJuego = new Juego();
         nuevoJuego.setTitulo(titulo);
         nuevoJuego.setDescripcion(descripcion);
+        nuevoJuego.setPrecio(precio);
+        nuevoJuego.setCategoria(categoria);
+        nuevoJuego.setUsuario(logueado);
 
         juegoService.guardarJuego(nuevoJuego, portada);
 
-        return "redirect:/juegos";
+        return "redirect:/mis-juegos";
 
     }
 
@@ -74,7 +96,7 @@ public class GameController {
         Usuario logueado = usuarioService.obtenerUsuarioLogueado();
 
         // Si el juego existe y el dueño coincide, mostramos el formulario
-        if (juego != null && juego.getUsuario().getId().equals(logueado.getId())) {
+        if (juego != null && logueado != null && juego.getUsuario() != null && juego.getUsuario().getId().equals(logueado.getId())) {
             model.addAttribute("juego", juego);
             return "formulario"; // Reutilizamos nuestra vista de formulario
         }
@@ -95,7 +117,7 @@ public class GameController {
         Usuario logueado = usuarioService.obtenerUsuarioLogueado();
 
         // Verificamos propiedad nuevamente antes de modificar
-        if (juegoExistente != null && juegoExistente.getUsuario().getId().equals(logueado.getId())) {
+        if (juegoExistente != null && logueado != null && juegoExistente.getUsuario() != null && juegoExistente.getUsuario().getId().equals(logueado.getId())) {
             juegoExistente.setTitulo(titulo);
             juegoExistente.setDescripcion(descripcion);
             juegoExistente.setPrecio(precio);
@@ -113,7 +135,7 @@ public class GameController {
         Usuario logueado = usuarioService.obtenerUsuarioLogueado();
 
         // Solo procedemos a borrar si el usuario logueado es el dueño
-        if (juego != null && juego.getUsuario().getId().equals(logueado.getId())) {
+        if (juego != null && logueado != null && juego.getUsuario() != null && juego.getUsuario().getId().equals(logueado.getId())) {
             juegoService.eliminarJuego(id);
         }
 
